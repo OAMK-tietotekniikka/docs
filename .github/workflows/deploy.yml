@@ -38,9 +38,9 @@ jobs:
           restore-keys: |
               ${{ runner.os }}-pnpm-
 
-                - name: Install dependencies
-                  working-directory: project_ms
-                  run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        working-directory: project_ms
+        run: pnpm install --frozen-lockfile
 
 
       - name: Build site
