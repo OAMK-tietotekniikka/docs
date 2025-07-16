@@ -25,13 +25,28 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Install dependencies
-        working-directory: project_ms
-        run: pnpm install
+      - name: Set Node.js memory limit
+        run: echo "NODE_OPTIONS=--max-old-space-size=3072" >> $GITHUB_ENV
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            project_ms/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('project_ms/pnpm-lock.yaml') }}
+          restore-keys: |
+              ${{ runner.os }}-pnpm-
+
+                - name: Install dependencies
+                  working-directory: project_ms
+                  run: pnpm install --frozen-lockfile
+
 
       - name: Build site
         working-directory: project_ms
         run: pnpm build
+
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
