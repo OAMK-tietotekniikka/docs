@@ -30,7 +30,7 @@ jobs:
         run: pnpm config set dedupe-peer-dependents true
 
       - name: Set Node.js memory limit
-        run: echo "NODE_OPTIONS=--max-old-space-size=4096" >> $GITHUB_ENV
+        run: echo "NODE_OPTIONS=--max-old-space-size=2048" >> $GITHUB_ENV
 
       - name: Cache pnpm dependencies
         uses: actions/cache@v4
