@@ -1,0 +1,58 @@
+---
+title: Commits
+---
+import {Aside} from "@astrojs/starlight/components";
+
+
+We follow the Conventional Commits standard to keep our commit history clear and consistent.
+You can read a quick summary of the rules [here](https://www.conventionalcommits.org/en/v1.0.0/#summary).
+
+### Commit Format
+
+Every time you make a commit, a pre-commit hook (using **Husky** and **Commitlint**) will run automatically.
+
+If your commit message doesn’t follow the required format:
+- You'll get an error message
+- The commit will be **aborted** and **stashed**
+
+To avoid this, just follow the correct commit message format. It helps keep our project history clean and easy to understand.
+<Aside type="note">
+    It's possible to bypass the pre-commit hook using the `-n` flag:
+
+    ```bash
+    git commit -m "some message" -n
+    ```
+</Aside>
+<br/>
+
+**Correct commit**
+
+```txt "feat:" "(#123)"
+feat: allow provided config object to extend other configs (#123)
+```
+
+**Incorrect commit**
+
+```txt
+send an email to the customer when a product is shipped
+```
+
+<Aside type="note">
+    Always include the related issue number at the end of the commit message in parentheses, e.g. (#123).
+    This helps track code changes to specific tasks or bugs in the issue tracker
+</Aside>
+
+
+**Available Prefixes**
+
+All available commit prefixes (e.g., `feat`, `fix`, `docs`, `refactor`) are defined in `commitlint.config.js` (root folder)
+
+<br/>
+
+---
+
+<Aside type="note">
+Before committing, please take a moment to read this short and helpful [article](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+
+*It only takes a minute and can really improve the quality of our commit history.*
+</Aside>

@@ -1,0 +1,86 @@
+---
+title: Contribute
+---
+
+import {LinkCard} from "@astrojs/starlight/components";
+
+
+## Open Development Philosophy
+
+All development work on Project MS happens on [GitHub](https://github.com/OAMK-tietotekniikka/ProjectsMS).
+Team members send pull requests which go through the same review process.
+
+## Getting Started
+---
+
+### Branch Management
+
+Before making any changes, create a new branch for your work.
+It's important that each group of changes be done in separate branches to ensure that a pull request only includes the commits related to that bug or feature.
+
+#### Branch Naming Convention
+
+Follow this standardized format for branch names:
+
+```
+<prefix>/<issue-number>-<short-description>
+```
+
+**Examples:**
+- `feat/123-add-test-controller`
+- `bugfix/124-fix-tests`
+- `docs/125-update-contribution-guide`
+
+**Available Prefixes:**
+- `feat/` - New features
+- `fix/` - Bug fixes
+- `hotfix/` - Critical bug fixes
+- `chore/` - Maintenance tasks
+- `docs/` - Documentation updates
+- `refactor/` - Code restructuring
+- `test/` - Test-related changes
+- `release/` - Release preparations
+
+Please use lowercase with hyphens (kebab-case)
+
+
+## Development Guidelines
+---
+### Code Quality Standards
+
+- **Comments**: Include clear, descriptive comments explaining complex logic
+- **Testing**: Since the project currently has no automated test coverage, please test all functionality manually before submitting
+- **Documentation**: Update relevant documentation when adding new features or changing existing behavior
+
+### Commit Messages
+
+Write clear, descriptive commit messages that follow our established conventions.
+Clear and consistent commit messages make the project easier to understand and work with.
+They also help Git tools display commits in a well-organized way
+
+<LinkCard
+    title="How to commit"
+    href="/en/how-to/commit/"
+/>
+
+## Submitting Changes
+---
+
+### Pull Request Process
+
+1. **Push your branch**: After completing your changes and testing, push your commits to your branch
+2. **Create pull request**: Submit a pull request to the `/staging` branch (not `main`)
+3. **Code review**: Wait for team review and address any feedback
+
+:::danger[Important]
+**Never create pull requests to the `main` branch** - they will be rejected.
+All contributions must target the `staging` branch first.
+:::
+
+
+### For Reviewers
+
+To maintain a clean Git history, always use `Squash and merge` when merging pull requests.
+This way, it doesn't matter how many commits PR has, as they will end up being a single commit after merging
+
+This is done to make a much cleaner git log history and helps to find regressions

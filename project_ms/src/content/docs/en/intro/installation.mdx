@@ -1,0 +1,306 @@
+---
+title: Installation
+description: Complete guide to setting up the project development environment
+
+next:
+    link: /en/how-to/login
+    label: How to login
+---
+
+import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/components";
+
+<Steps>
+1. **Install prerequisites**
+
+    Before you begin, ensure you have the following tools installed on your system:
+
+    - **Git** (latest version) - [Download here](https://git-scm.com/downloads)
+    - **Docker Desktop** or Docker CLI - [Download here](https://docs.docker.com/desktop/)
+    - **Node.js** (v24.0 or higher) - [Download here](https://nodejs.org/en/download)
+    - **pnpm** (v11.0 or higher) - [Installation guide](https://pnpm.io/installation)
+    - **Redis** (v8.0 or higher) - [Download here](https://redis.io/downloads/)
+
+    :::note[Good tools for managing databases]
+        - [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)
+        - [DBeaver](https://dbeaver.io/)
+        - [TablePlus](https://tableplus.com/download/)
+        - [HeidiSQL](https://www.heidisql.com/)
+        - MySQL Command Line etc.
+
+
+    :::
+
+    <br/>
+
+2. **Clone the repository**
+
+    Choose one of the following methods to clone the project:
+
+    ```bash
+    # Using HTTPS
+    git clone https://github.com/OAMK-tietotekniikka/ProjectsMS.git
+
+    # Using SSH (if you have SSH keys configured)
+    git clone git@github.com:OAMK-tietotekniikka/ProjectsMS.git
+
+    # Using GitHub CLI
+    gh repo clone OAMK-tietotekniikka/ProjectsMS
+    ```
+
+    Navigate to the project directory:
+    ```bash
+    cd projectMS
+    ```
+
+    <br/>
+
+3. **Install dependencies**
+
+    The project has a multi-package structure. You'll need to install dependencies in three locations:
+
+    <FileTree>
+        - **projectMS** (install dependencies here first)
+            - dbinit
+                - init.sql
+            - **server** (backend)
+                - files
+                - package.json
+            - **frontend** (frontend)
+                - files
+                - package.json
+        - package.json
+        - .gitignore
+    </FileTree>
+
+    Install dependencies in the following order:
+
+    **Root directory (development tools):**
+    ```bash
+    # From the project-ms root directory
+    pnpm install
+    ```
+
+    **Frontend dependencies:**
+    ```bash
+    cd frontend
+    pnpm install
+    cd ..
+    ```
+
+    **Server dependencies:**
+    ```bash
+    cd server
+    pnpm install
+    cd ..
+    ```
+
+    <br/>
+
+
+4. **Configure environment variables (optional)**
+
+    The project includes environment files for both frontend and server components.
+    Review and modify these files as needed for your development environment.
+
+    <FileTree>
+        - projectMS
+            - **server**
+                - files
+                - .env
+            - **frontend**
+                - files
+                - .env
+    </FileTree>
+
+    <Aside type="note">
+        For development, you may need to change `VITE_RUNNING_ENV` from `production` to `development` in the frontend `.env` file.
+    </Aside>
+
+    Key environment variables to review:
+    - **Frontend**: `VITE_RUNNING_ENV`, API endpoints
+    - **Server**: Database connection settings, Redis configuration
+    <br/>
+
+5. **Run the project**
+
+    <Aside type="note">
+        We strongly recommend using the Docker approach for consistency and easier setup.
+        Use the non-Docker method only if you have specific requirements.
+    </Aside>
+
+    <Tabs>
+        <TabItem label="Docker (Recommended)">
+
+            **Option 1: Fully containerized (Simplest)**
+
+            Run the entire application stack using Docker Compose:
+
+            ```bash
+            # Development mode with hot reload
+            docker-compose -f docker-compose-dev.yml up --build
+
+            # Production mode (no hot reload)
+            docker-compose up --build
+            ```
+
+            <Aside type="tip">
+                **Linux/macOS users**: Use the provided Makefile for even easier setup:
+                ```bash
+                make
+                ```
+                This command shows all available options and can start the containers with fewer commands.
+            </Aside>
+
+            **Option 2: Hybrid approach (More flexible)**
+
+            Run the database in Docker while running the server and frontend locally:
+
+            **Start the database:**
+            <Tabs>
+                <TabItem label="Linux/macOS">
+                    ```bash
+                    chmod +x ./start_mdb.sh
+                    ./start_mdb.sh
+                    ```
+                </TabItem>
+                <TabItem label="Windows (command prompt)">
+                    ```cmd
+                    set INIT_SQL=%cd%\dbinit\init.sql
+
+                    docker run -d --name mysql-local -p 3307:3306 ^
+                    -e MYSQL_ROOT_PASSWORD=pwd@123 ^
+                    -e MYSQL_DATABASE=studentsdb ^
+                    -e MYSQL_USER=admin ^
+                    -e MYSQL_PASSWORD=pwd@123 ^
+                    -v "%INIT_SQL%:/docker-entrypoint-initdb.d/0_init.sql" ^
+                    mysql:lts
+                    ```
+                </TabItem>
+            </Tabs>
+
+
+            **Start the server:**
+            ```bash
+            cd server
+            pnpm run start:dev
+            ```
+            Default port: http://localhost:8081
+
+            **Start the frontend:**
+            ```bash
+            cd frontend
+            pnpm run dev
+            ```
+            Default port: http://localhost:5000
+
+        </TabItem>
+
+        <TabItem label="Without Docker (Advanced)">
+
+            <Aside type="caution">
+                This method requires manual database and Redis setup. Only use if you're comfortable with database administration.
+            </Aside>
+
+            **Install MariaDB:**
+
+            <Tabs>
+                <TabItem label="Linux/macOS">
+                    ```bash
+                    # Linux
+                    sudo apt update
+                    sudo apt install mariadb-server
+
+                    # macOS
+                    brew install mariadb
+                    ```
+                </TabItem>
+                <TabItem label="Windows">
+                    Download from [mariadb.org/download](https://mariadb.org/download/) and follow the installation wizard.
+                </TabItem>
+            </Tabs>
+
+            **Configure the database:**
+
+            Start MariaDB:
+            ```bash
+            # Linux/macOS
+            sudo systemctl start mariadb
+
+            # Windows
+            net start MariaDB
+            ```
+
+            Set up the database:
+            ```bash
+            # Login to MariaDB
+            mysql -u root -p
+
+            # Create database and user
+            CREATE DATABASE IF NOT EXISTS project_ms;
+            CREATE USER IF NOT EXISTS 'admin'@'localhost' IDENTIFIED BY 'pwd@123';
+            GRANT ALL PRIVILEGES ON project_ms.* TO 'admin'@'localhost';
+            FLUSH PRIVILEGES;
+            EXIT;
+
+            # Initialize the database schema
+            mysql -u root -p project_ms < dbinit/init.sql
+            ```
+
+            **Configure server environment:**
+
+            Ensure your `server/.env` file matches these database settings:
+            ```txt
+            DB_HOST=localhost
+            DB_USER=admin
+            DB_PASSWORD=pwd@123
+            DB_NAME=project_ms
+            DB_PORT=3306
+            ```
+
+            :::danger[Important]
+                If your database configuration differs from the default values above, update the `server/.env` file accordingly or the application will fail to connect.
+            :::
+
+            ---
+            **Install and start Redis:**
+
+            Linux/macOS:
+            ```bash
+            sudo systemctl start redis
+            ```
+
+            Windows (using WSL):
+            ```bash
+            sudo apt install redis-server
+            sudo service redis-server start
+            ```
+
+            **Start the application:**
+
+            Start the server:
+            ```bash
+            cd server
+            pnpm run start:dev
+            ```
+
+            Start the frontend:
+            ```bash
+            cd frontend
+            pnpm run dev
+            ```
+
+
+        </TabItem>
+    </Tabs>
+
+</Steps>
+
+## Next steps
+
+Once the application is running:
+
+1. **Frontend**: Navigate to http://localhost:5000
+2. **Backend API**: Available at http://localhost:8081
+3. **Database**: Accessible on port 3306 (non-Docker) or 3307 (Docker)
+
+For development, both frontend and server support hot reload, so your changes will be reflected automatically.

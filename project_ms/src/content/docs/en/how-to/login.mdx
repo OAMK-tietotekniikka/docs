@@ -1,0 +1,111 @@
+---
+title: Sign Up & Login
+---
+import {FileTree, Steps, TabItem, Tabs, Code} from "@astrojs/starlight/components";
+
+
+export const exampleCode = `console.log('This could come from a file or CMS!');`;
+export const fileName = 'example.js';
+export const highlights = ['file', 'CMS'];
+
+
+
+
+After you've successfully installed the app, if you'd like to test the frontend functionality, you'll need to log in.
+This can be done easily in a few different ways.
+
+:::note[Before you start]
+    - It's highly recommended to use the **token** approach instead of **Microsoft auth** to avoid potential errors and issues.
+    - Before running in development mode, make sure to update the `authenticate` function in `server/src/shared/middleware/auth.ts`
+    ```diff lang="js"
+    // auth.ts
+    else {
+    -   req.user = await validateToken(token); // comment out
+    +   req.user = await decodeTokenTest(token);
+    }
+    ```
+:::
+
+<Tabs>
+    <TabItem label="Microsoft auth">
+        To use Microsoft MSAL authentication, you'll need to set up your own Microsoft Azure directory and configure it.
+
+        <Steps>
+            1. Go to the [Azure portal](https://portal.azure.com/#home)
+            2. Search for `App registrations` in the top search bar
+            3. Click **New registration**
+            4. Fill in the required fields
+
+                (Redirect URI: `http://localhost:5000`, Type: **SPA**)
+            5. Click **Register**
+            6. Note down your **Application (client) ID** and **Directory (tenant) ID**
+            7. In your app registration, go to **Authentication**
+            8. If you haven't done this already:
+                Add a platform → **Single-page application**
+                Add a redirect URI: `http://localhost:5000` (for development)
+
+            9. Under *Implicit grant and hybrid flows*, enable:
+                - **Access tokens**
+                - **ID tokens**
+            10. Update the authentication configuration file
+
+                <FileTree>
+                    - **frontend**
+                        - src
+                            - config
+                                - **authConfig.ts**
+                </FileTree>
+
+                Add the following configuration to `authConfig.ts`:
+
+                ```ts {4-6}
+                // authConfig.ts
+                export const msalConfig = {
+                    auth: {
+                        clientId: "YOUR_CLIENT_ID", // Application (client) ID from Azure
+                        authority: "https://login.microsoftonline.com/YOUR_TENANT_ID", // Directory (tenant) ID
+                        redirectUri: "http://localhost:5000", // Must match redirect URI in Azure
+                    },
+                };
+                ```
+            11. In the server, change the default role from "visitor" to your desired role (e.g., `teacher` or `student`):
+                <FileTree>
+                    - **server**
+                        - src
+                            - shared
+                                - middleware
+                                    - **auth.ts**
+                </FileTree>
+                ```diff lang="js"
+                // auth.ts
+                else {
+                -   role = "visitor"; // change to student or teacher (the role you want)
+                +   role = "student";
+                }
+                ```
+            12. After everything is set up, go to `http://localhost:5000` and log in using the main login button.
+        </Steps>
+    </TabItem>
+
+    <TabItem label="Token auth">
+        <Steps>
+            1. Generate a token
+                ```bash
+                cd server/src/shared/utils
+                node token_generator.js
+                ```
+                ![Token generator demo](../../../../assets/token_generator.gif)
+            2. Check that `.env` file is set up correctly:
+                <FileTree>
+                    - **frontend**
+                        - .env
+                </FileTree>
+                ```txt
+                // .env
+                VITE_RUNNING_ENV=development
+                ```
+            3. Go to `http://localhost:5000` and log in using the **Dev login** button.
+        </Steps>
+    </TabItem>
+</Tabs>
+
