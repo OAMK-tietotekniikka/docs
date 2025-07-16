@@ -20,7 +20,7 @@ export default defineConfig({
 			],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/OAMK-tietotekniikka/ProjectsMS' }],
 			editLink: {
-				baseUrl: 'https://github.com/OAMK-tietotekniikka/docs',
+				baseUrl: 'https://github.com/OAMK-tietotekniikka/docs/edit/main/project_ms/',
 			},
 			title: {
 				en: 'Project MS Docs',
