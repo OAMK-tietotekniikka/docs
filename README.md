@@ -1,3 +1,3 @@
 - **Main Project:** [GitHub Repository](https://github.com/OAMK-tietotekniikka/ProjectsMS)
-- **Documentation:** All docs are in the `project_ms` directory and online [here](oamk-tietotekniikka.github.io/docs/en).
+- **Documentation:** All docs are in the `project_ms` directory and online [here](https://oamk-tietotekniikka.github.io/docs/en/).
 - **Feedback:** If you find any issues with the documentation, please [open a ticket here](https://github.com/OAMK-tietotekniikka/docs/issues/new).
