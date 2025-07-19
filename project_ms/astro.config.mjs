@@ -35,12 +35,15 @@ export default defineConfig({
 					items: [
 						'intro/about',
 						'intro/installation',
-						'explanation/architecture'
 					]
 				},
 				{
 					label: 'How-to',
 					autogenerate: { directory: 'how-to' },
+				},
+				{
+					label: 'Explanation',
+					autogenerate: { directory: 'explanation' },
 				},
 				{
 					label: 'Reference',
