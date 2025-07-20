@@ -121,7 +121,8 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
     - `DB_USER`: Username used to connect to the database.
     - `DB_PASSWORD`: Password used to connect to the database.
     - `DB_NAME`: Name of the database.
-    - `DB_PORT`: Port number the database is listening on.
+    - `DB_PORT_LOCAL`: Port number the database is listening on (for local).
+    - `DB_PORT_DOCKER`: Port number the database is listening on (for docker).
     - `DB_CONNECTION_LIMIT`: Maximum number of allowed connections to the database.
 
     ##### Redis settings
@@ -136,6 +137,7 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
     - `NODE_ENV`: Indicates whether the backend is running in development, test, or production mode.
     - `SERVICE_TAGS`: Tags that identify the environment (for example, `dev`, `prod`, `staging`).
     - `SERVICE_NAME`: The name of the backend service (for example, `project_ms`).
+    - `IS_DOCKER`: Indicates whether the app is running in Docker.
 
     :::
 
@@ -156,6 +158,11 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
             **Option 1: Fully containerized (Simplest)**
 
             Run the entire application stack using Docker Compose:
+
+            ```bash "true"
+            // .env
+            IS_DOCKER=true
+            ```
 
             ```bash
             # Development mode with hot reload
@@ -181,6 +188,14 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
 
             Run the database in Docker while running the server and frontend locally:
 
+            **Update the configuration:**
+            ```bash "false"
+            // .env
+            IS_DOCKER=false
+            ```
+
+            <br/><br/>
+
             **Start the database:**
             <Tabs>
                 <TabItem label="Linux/macOS">
@@ -194,7 +209,7 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
                     ```cmd
                     set INIT_SQL=%cd%\dbinit\init.sql
 
-                    docker run -d --name mysql-local -p 3306:3306 ^
+                    docker run -d --name mysql-local -p 3307:3306 ^
                     -e MYSQL_ROOT_PASSWORD=pwd@123 ^
                     -e MYSQL_DATABASE=studentsdb ^
                     -e MYSQL_USER=admin ^
@@ -206,6 +221,7 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
             </Tabs>
 
             <br/><br/>
+
             **Start the server:**
             ```bash
             cd server
@@ -274,19 +290,8 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
             mysql -u root -p project_ms < dbinit/init.sql
             ```
 
-            **Configure server environment:**
-
-            Ensure your `server/.env` file matches these database settings:
-            ```txt
-            DB_HOST=localhost
-            DB_USER=admin
-            DB_PASSWORD=pwd@123
-            DB_NAME=project_ms
-            DB_PORT=3306
-            ```
-
             :::danger[Important]
-                If your database configuration differs from the default values above, update the `server/.env` file accordingly or the application will fail to connect.
+                If your database configuration differs from the default values above, update the `.env` file accordingly or the application will fail to connect.
             :::
 
             ---
@@ -302,6 +307,16 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
             sudo apt install redis-server
             sudo service redis-server start
             ```
+
+            <br/><br/>
+
+            **Update the configuration:**
+            ```bash "false"
+            // .env
+            IS_DOCKER=false
+            ```
+
+            <br/><br/>
 
             **Start the application:**
 
@@ -329,6 +344,6 @@ Once the application is running:
 
 1. **Frontend**: Navigate to http://localhost:3000
 2. **Backend API**: Available at http://localhost:8000
-3. **Database**: Accessible on port 3306
+3. **Database**: Accessible on port 3307
 
 Both frontend and server support hot reload during development (`docker-compose.dev` or `without Docker`), so your changes update automatically.
