@@ -1,61 +1,61 @@
 ---
 title: Architecture & Structure
 description: Overview of Project MS architecture and components
+lastUpdated: 2025-07-20
 ---
 
 import { FileTree } from "@astrojs/starlight/components";
 
 
-Our platform is built on three core parts that work together
+The system consists of three core components that work together.
 
 ![General architecture](../../../../assets/general_architecture.svg)
 
 
 ---
 
-### Frontend Service
+### Frontend service
 
-**Technology:** React 19 + TypeScript
+**Technology:** React 19 and TypeScript
 
-**Main Features:**
+**Key features:**
 
-* **Student Interface:** Tools and views for student activities
-* **Teacher Interface:** Tools for managing classes and student resources
-* **Authentication:** Integrated with Microsoft Authentication Library (MSAL) and state management
-* **Responsive Design:** Optimized for both desktop and mobile devices
+* **Student interface:** Provides tools and views for student tasks
+* **Teacher interface:** Supports class and resource management
+* **Authentication:** Integrates with Microsoft Authentication Library (MSAL) and handles user state
+* **Responsive design:** Adapts to desktop and mobile screen sizes
 
-**Communication:** Connects to backend services using RESTful APIs
+**Communication:** Uses REST APIs to interact with backend services
 
 ---
 
-### Backend Service
+### Backend service
 
 **Technology:** Node.js 24+ with Express
 
-**Main Features:**
+**Key features:**
 
-* **Authentication & Authorization:** Uses JWTs and MSAL tokens to manage access
-* **Security:** Rate limiting and input validation
-* **Email Support:** Sends emails using Amazon SES
-* **Logging:** Writes logs to files for monitoring and debugging
+* **Authentication and authorization:** Uses MSAL id tokens to control access
+* **Security:** Applies rate limiting and input validation
+* **Email support:** Sends emails using EmailLabs
+* **Logging:** Writes log data to files for monitoring and debugging
 
-**API Docs:** Fully documented using OpenAPI
-
----
-
-### Database Layer
-
-* **Primary Database:** MariaDB 11+
-* **Cache:** Redis for faster query performance
-
+**API documentation:** Defined with the OpenAPI specification
 
 ---
 
-## Project Structure
+### Database layer
 
-The project uses a **modular, feature-based architecture** to keep the code organized, scalable, and easy to maintain.
+* **Primary database:** MariaDB 11 or later
+* **Cache:** Redis, used to improve query performance
 
 ---
+
+## Project structure
+
+---
+
+
 
 
 
@@ -81,6 +81,8 @@ The project uses a **modular, feature-based architecture** to keep the code orga
             - package.json              (Dependencies and scripts)
             - pnpm-lock.yaml           (Dependency lock file)
             - **index.html**            (HTML entry point)
+        - scripts                    (scripts)
+            - ...
         - **server**                 (Express.js backend)
             - logs/                     (Winston log files when logging is enabled)
             - src/
@@ -91,11 +93,11 @@ The project uses a **modular, feature-based architecture** to keep the code orga
                 - shared/                 (Shared utilities and helper functions)
                 - app.ts                  (Express application setup)
                 - **index.ts**            (Server entry point)
-            - .env                      (Environment variables)
             - Dockerfile                (Container configuration)
             - openapi.yaml              (API specification and documentation)
             - package.json              (Dependencies and scripts)
             - pnpm-lock.yaml           (Dependency lock file)
+        - .env                        (environmental variables)
         - biome.json                  (Code linting and formatting configuration)
         - commitlint.config.js        (Commit message linting rules)
         - docker-compose.yml          (Production container orchestration)
