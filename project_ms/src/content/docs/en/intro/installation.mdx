@@ -1,6 +1,7 @@
 ---
 title: Installation
 description: Complete guide to setting up the project development environment
+lastUpdated: 2025-07-20
 
 next:
     link: /docs/en/how-to/login
@@ -30,36 +31,49 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
 
     :::
 
-    <br/>
+    <br/><br/>
 
 2. **Clone the repository**
 
     Choose one of the following methods to clone the project:
 
+
     ```bash
     # Using HTTPS
     git clone https://github.com/OAMK-tietotekniikka/ProjectsMS.git
+    ```
 
+    <br/><br/>
+
+
+    ```bash
     # Using SSH (if you have SSH keys configured)
     git clone git@github.com:OAMK-tietotekniikka/ProjectsMS.git
+    ```
 
+    <br/><br/>
+
+
+    ```bash
     # Using GitHub CLI
     gh repo clone OAMK-tietotekniikka/ProjectsMS
     ```
+
+    <br/><br/>
 
     Navigate to the project directory:
     ```bash
     cd projectMS
     ```
 
-    <br/>
+    <br/><br/>
 
 3. **Install dependencies**
 
-    The project has a multi-package structure. You'll need to install dependencies in three locations:
+    The project has a multi-package structure. You'll need to install dependencies first:
 
     <FileTree>
-        - **projectMS** (install dependencies here first)
+        - **projectMS** (install dependencies here)
             - dbinit
                 - init.sql
             - **server** (backend)
@@ -68,34 +82,21 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
             - **frontend** (frontend)
                 - files
                 - package.json
-        - package.json
-        - .gitignore
+            - package.json
+            - .gitignore
     </FileTree>
 
-    Install dependencies in the following order:
+    Install dependencies:
 
     **Root directory (development tools):**
-    ```bash
+    ```bash "pnpm"
+    # Don't forget to install pnpm first
     # From the project-ms root directory
     pnpm install
     ```
 
-    **Frontend dependencies:**
-    ```bash
-    cd frontend
-    pnpm install
-    cd ..
-    ```
 
-    **Server dependencies:**
-    ```bash
-    cd server
-    pnpm install
-    cd ..
-    ```
-
-    <br/>
-
+    <br/><br/>
 
 4. **Configure environment variables (optional)**
 
@@ -104,22 +105,43 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
 
     <FileTree>
         - projectMS
-            - **server**
-                - files
-                - .env
-            - **frontend**
-                - files
-                - .env
+            - **.env**
     </FileTree>
 
-    <Aside type="note">
-        For development, you may need to change `VITE_RUNNING_ENV` from `production` to `development` in the frontend `.env` file.
-    </Aside>
+    :::note[About environment variables]
 
-    Key environment variables to review:
-    - **Frontend**: `VITE_RUNNING_ENV`, API endpoints
-    - **Server**: Database connection settings, Redis configuration
-    <br/>
+    ##### Frontend settings
+
+    - `VITE_NODE_ENV`: Indicates whether the frontend is running in development or production mode.
+    - `VITE_API_URL`: The base URL the frontend uses to communicate with the backend API.
+
+    ##### Database settings
+
+    - `DB_HOST`: Hostname or IP address of the database server (for example, `localhost`).
+    - `DB_USER`: Username used to connect to the database.
+    - `DB_PASSWORD`: Password used to connect to the database.
+    - `DB_NAME`: Name of the database.
+    - `DB_PORT`: Port number the database is listening on.
+    - `DB_CONNECTION_LIMIT`: Maximum number of allowed connections to the database.
+
+    ##### Redis settings
+
+    - `REDIS_HOST`: Hostname or IP address of the Redis server.
+    - `REDIS_PORT`: Port number the Redis server is listening on (default is `6379`).
+
+    ##### Server settings
+
+    - `SERVER_PORT`: Port number the backend server listens on.
+    - `API_URL`: Base URL of the backend API (for example, `http://localhost:8000`).
+    - `NODE_ENV`: Indicates whether the backend is running in development, test, or production mode.
+    - `SERVICE_TAGS`: Tags that identify the environment (for example, `dev`, `prod`, `staging`).
+    - `SERVICE_NAME`: The name of the backend service (for example, `project_ms`).
+
+    :::
+
+
+
+    <br/><br/>
 
 5. **Run the project**
 
@@ -137,12 +159,15 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
 
             ```bash
             # Development mode with hot reload
+            # Run from the project-ms root directory
             docker-compose -f docker-compose-dev.yml up --build
 
             # Production mode (no hot reload)
+            # Run from the project-ms root directory
             docker-compose up --build
             ```
 
+            <br/>
             <Aside type="tip">
                 **Linux/macOS users**: Use the provided Makefile for even easier setup:
                 ```bash
@@ -151,6 +176,7 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
                 This command shows all available options and can start the containers with fewer commands.
             </Aside>
 
+            <br/><br/>
             **Option 2: Hybrid approach (More flexible)**
 
             Run the database in Docker while running the server and frontend locally:
@@ -159,6 +185,7 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
             <Tabs>
                 <TabItem label="Linux/macOS">
                     ```bash
+                    cd scripts
                     chmod +x ./start_mdb.sh
                     ./start_mdb.sh
                     ```
@@ -167,31 +194,32 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
                     ```cmd
                     set INIT_SQL=%cd%\dbinit\init.sql
 
-                    docker run -d --name mysql-local -p 3307:3306 ^
+                    docker run -d --name mysql-local -p 3306:3306 ^
                     -e MYSQL_ROOT_PASSWORD=pwd@123 ^
                     -e MYSQL_DATABASE=studentsdb ^
                     -e MYSQL_USER=admin ^
                     -e MYSQL_PASSWORD=pwd@123 ^
-                    -v "%INIT_SQL%:/docker-entrypoint-initdb.d/0_init.sql" ^
+                    -v "%INIT_SQL%:/docker-entrypoint-initdb.d/init.sql" ^
                     mysql:lts
                     ```
                 </TabItem>
             </Tabs>
 
-
+            <br/><br/>
             **Start the server:**
             ```bash
             cd server
             pnpm run start:dev
             ```
-            Default port: http://localhost:8081
+            Default port: `http://localhost:8000`
 
+            <br/><br/>
             **Start the frontend:**
             ```bash
             cd frontend
             pnpm run dev
             ```
-            Default port: http://localhost:5000
+            Default port: `http://localhost:3000`
 
         </TabItem>
 
@@ -299,8 +327,8 @@ import {Aside, FileTree, Steps, TabItem, Tabs} from "@astrojs/starlight/componen
 
 Once the application is running:
 
-1. **Frontend**: Navigate to http://localhost:5000
-2. **Backend API**: Available at http://localhost:8081
-3. **Database**: Accessible on port 3306 (non-Docker) or 3307 (Docker)
+1. **Frontend**: Navigate to http://localhost:3000
+2. **Backend API**: Available at http://localhost:8000
+3. **Database**: Accessible on port 3306
 
-For development, both frontend and server support hot reload, so your changes will be reflected automatically.
+Both frontend and server support hot reload during development (`docker-compose.dev` or `without Docker`), so your changes update automatically.

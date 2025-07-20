@@ -1,5 +1,6 @@
 ---
 title: Sign Up & Login
+lastUpdated: 2025-07-20
 ---
 import {FileTree, Steps, TabItem, Tabs, Code} from "@astrojs/starlight/components";
 
@@ -32,21 +33,28 @@ This can be done easily in a few different ways.
 
         <Steps>
             1. Go to the [Azure portal](https://portal.azure.com/#home)
+                <br/>
             2. Search for `App registrations` in the top search bar
+                <br/>
             3. Click **New registration**
+                <br/>
             4. Fill in the required fields
-
-                (Redirect URI: `http://localhost:5000`, Type: **SPA**)
+                (Redirect URI: `http://localhost:3000`, Type: **SPA**)
+                <br/>
             5. Click **Register**
+                <br/>
             6. Note down your **Application (client) ID** and **Directory (tenant) ID**
+                <br/>
             7. In your app registration, go to **Authentication**
+                <br/>
             8. If you haven't done this already:
                 Add a platform → **Single-page application**
-                Add a redirect URI: `http://localhost:5000` (for development)
-
+                Add a redirect URI: `http://localhost:3000` (for development)
+                <br/>
             9. Under *Implicit grant and hybrid flows*, enable:
                 - **Access tokens**
                 - **ID tokens**
+                <br/>
             10. Update the authentication configuration file
 
                 <FileTree>
@@ -64,7 +72,7 @@ This can be done easily in a few different ways.
                     auth: {
                         clientId: "YOUR_CLIENT_ID", // Application (client) ID from Azure
                         authority: "https://login.microsoftonline.com/YOUR_TENANT_ID", // Directory (tenant) ID
-                        redirectUri: "http://localhost:5000", // Must match redirect URI in Azure
+                        redirectUri: "http://localhost:3000", // Must match redirect URI in Azure
                     },
                 };
                 ```
@@ -83,7 +91,7 @@ This can be done easily in a few different ways.
                 +   role = "student";
                 }
                 ```
-            12. After everything is set up, go to `http://localhost:5000` and log in using the main login button.
+            12. After everything is set up, go to `http://localhost:3000` and log in using the main login button.
         </Steps>
     </TabItem>
 
@@ -97,14 +105,14 @@ This can be done easily in a few different ways.
                 ![Token generator demo](../../../../assets/token_generator.gif)
             2. Check that `.env` file is set up correctly:
                 <FileTree>
-                    - **frontend**
+                    - **projectMS** (root folder)
                         - .env
                 </FileTree>
-                ```txt
+                ```txt "development"
                 // .env
-                VITE_RUNNING_ENV=development
+                VITE_NODE_ENV=development
                 ```
-            3. Go to `http://localhost:5000` and log in using the **Dev login** button.
+            3. Go to `http://localhost:3000` and log in using the **Dev login** button.
         </Steps>
     </TabItem>
 </Tabs>
