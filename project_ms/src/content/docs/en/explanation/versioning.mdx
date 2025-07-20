@@ -1,9 +1,66 @@
 ---
-title: v
+title: Versioning
+lastUpdated: 2025-07-20
 ---
 
-Semantic Versioning
+import { Badge } from '@astrojs/starlight/components';
 
-React follows semantic versioning. We release patch versions for critical bugfixes, minor versions for new features or non-essential changes, and major versions for any breaking changes. When we make breaking changes, we also introduce deprecation warnings in a minor version so that our users learn about the upcoming changes and migrate their code in advance. Learn more about our commitment to stability and incremental migration in our versioning policy.
+We follow a versioning scheme similar to **[Semantic Versioning (SemVer)](https://semver.org/)**. This document outlines our versioning practices and how to update the version number.
 
-Every significant change is documented in the changelog file.
+-----
+
+### Versioning Scheme
+
+Our version format is
+```txt "MAJOR" "MINOR" "PATCH"
+MAJOR.MINOR.PATCH # (e.g 1.2.3)
+```
+  * <Badge text="MAJOR" variant="tip"/>: Incremented for any breaking changes.
+  * <Badge text="MINOR" variant="note"/>: Incremented for new, backward-compatible features or non-essential changes.
+  * <Badge text="PATCH" variant="success"/>: Incremented for critical, backward-compatible bug fixes.
+
+Until the first stable release (`1.0.0`), all versions will start with a leading zero (e.g., `0.2.1`). <br/>
+Every significant change should be documented in the `CHANGELOG.md` file.
+
+-----
+
+### How to Update the Version
+
+Version updates are currently a manual process.
+We recommend using **[git-cliff](https://git-cliff.org/)** to help generate the changelog from your git history.
+
+Steps to update the project version:
+
+```bash
+# 1. Set the new version number as an environment variable
+NEW_VERSION="v1.2.0"
+
+# 2. Update the version in package.json without creating a git tag yet
+npm version ${NEW_VERSION#v} --no-git-tag-version
+
+# 3. Generate the changelog for the new version
+git cliff -t $NEW_VERSION -o CHANGELOG.md
+
+
+# 4. Stage the updated files
+git add CHANGELOG.md package.json
+
+# 5. Commit the changes with a conventional commit message
+git commit -m "chore(release): prepare for $NEW_VERSION"
+
+# 6. Create an annotated git tag for the release
+git tag -a $NEW_VERSION -m "Release $NEW_VERSION"
+
+# 7. Push the commit and tags to the remote repository
+git push <origin> <branch> --tags
+```
+
+-----
+
+### Process & Future Automation
+
+- This update process should be performed when pushing or merging a release into the `main` or `staging` branch.
+
+- Currently, updates must be done manually due to inconsistent commit messages.
+
+- After a stable release, version management and changelog generation will be automated using a tool like `git-cliff`
